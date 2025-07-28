@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mind Ease - Home Page</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@600&family=Lobster+Two:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+
+    <link rel="stylesheet" href="./assets/css/home.css" />
+
+    <link rel="icon" type="image/x-icon" href="./assets/img/logo-2.png" />
+    <link rel="icon" type="image/png" href="./assets/img/logo-2.png" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="./assets/img/logo-2.png" />
+
+    <style>
+      /* Star Rating Styles */
+      .star-rating {
+        display: flex;
+        gap: 8px;
+        font-size: 28px;
+        cursor: pointer;
+        justify-content: center;
+        margin: 10px 0;
+      }
+      .star {
+        color: #e0e0e0; /* Light gray for unselected stars */
+        transition: color 0.3s ease;
+      }
+      .star.selected, .star:hover, .star:hover ~ .star {
+        color: #ffd700; /* Gold for selected/hovered stars */
+      }
+
+      /* Toast Message Styles */
+      .toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #28a745;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        z-index: 1000;
+      }
+      .toast.show {
+        opacity: 1;
+      }
+
+      /* Review Section Styles */
+      .testimonial-section {
+        text-align: center;
+        padding: 50px 20px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+        border-radius: 12px;
+        margin: 40px 0;
+      }
+      .testimonial-section h1 {
+        font-family: 'Lobster Two', cursive;
+        font-size: 2.5rem;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+      .testimonial-section p {
+        font-size: 1.2rem;
+        color: #7f8c8d;
+        margin-bottom: 20px;
+      }
+      .add-review-btn {
+        background-color: #3498db;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      .add-review-btn:hover {
+        background-color: #2980b9;
+        transform: scale(1.05);
+      }
+
+      /* Testimonial Carousel Styles */
+      .api-testimonial-carousel {
+        max-width: 1200px;
+        margin: 0 auto;
+        overflow: hidden;
+      }
+      .testimonial-slides {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+      }
+      .testimonial-item {
+        flex: 0 0 33.33%;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      .testimonial-item .d-flex {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .testimonial-item .d-flex:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      }
+      .testimonial-item img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+      }
+      .testimonial-item h3 {
+        font-size: 1.3rem;
+        color: #2c3e50;
+        margin: 0 0 5px;
+      }
+      .testimonial-item span {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        display: block;
+        margin-bottom: 10px;
+      }
+      .testimonial-item p {
+        font-size: 1rem;
+        color: #34495e;
+        font-style: italic;
+        margin: 0;
+      }
+      .owl-nav {
+        text-align: center;
+        margin-top: 20px;
+      }
+      .owl-nav button {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin: 0 10px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+      .owl-nav button:hover {
+        background: #2980b9;
+      }
+
+      /* Review Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+      .modal-content {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+        animation: slideIn 0.3s ease;
+      }
+      @keyframes slideIn {
+        from { transform: translateY(-50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      .close-button {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #2c3e50;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 1rem;
+        color: #2c3e50;
+        margin-bottom: 5px;
+      }
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+      }
+      .form-group textarea {
+        resize: vertical;
+      }
+      .form-group button {
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 1.1rem;
+        transition: background 0.3s ease;
+      }
+      .form-group button:hover {
+        background: #2980b9;
+      }
+
+      @media (max-width: 768px) {
+        .testimonial-item {
+          flex: 0 0 100%;
+        }
+        .testimonial-item .d-flex {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        .testimonial-item img {
+          margin-bottom: 10px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <a href="./index.html" class="navbar-brand">
+        <img src="./assets/img/logo-2.png" alt="Logo" />
+      </a>
+
+      <div class="hamburger" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+
+      <ul class="navbar-nav">
+        <li><a href="./index.html" class="nav-link active">Home</a></li>
+        <li><a href="./blog.html" class="nav-link">Blog</a></li>
+        <li><a href="./about.html" class="nav-link">About Us</a></li>
+        <li><a href="./contact.html" class="nav-link">Contact Us</a></li>
+      </ul>
+
+      <div class="register-container cursor-pointer">
+        <a href="./login.html" class="nav-link btn">Login</a>
+      </div>
+    </nav>
+    <div class="carousel-container">
+      <div class="carousel-items">
+        <div
+          class="carousel-item"
+          style="background-image: url('./assets/img/carousel-1.jpg')"
+        >
+          <div class="hero-header">
+            <div class="hero-header-inner">
+              <h2>Learn and master yourself in an easy way</h2>
+              <p>
+                This app is a leading online logical and empathetic website that
+                helps users find academic, career, mental health, and other
+                support.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="carousel-item"
+          style="background-image: url('./assets/img/carousel-2.jpg')"
+        >
+          <div class="hero-header">
+            <div class="hero-header-inner">
+              <h2>Learn and master yourself in an easy way</h2>
+              <p>
+                This app is a leading online logical and empathetic website that
+                helps users find academic, career, mental health, and other
+                support.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="carousel-item"
+          style="background-image: url('./assets/img/carousel-3.jpg')"
+        >
+          <div class="hero-header">
+            <div class="hero-header-inner">
+              <h2>Learn and master yourself in an easy way</h2>
+              <p>
+                This app is a leading online logical and empathetic website that
+                helps users find academic, career, mental health, and other
+                support.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-nav">
+        <button class="prev" style="margin-left: 10px">&#10094;</button>
+        <button class="next" style="margin-right: 10px">&#10095;</button>
+      </div>
+    </div>
+    <section>
+      <h1 style="text-align: center; margin-top: 70px">Success Stories</h1>
+      <div class="Facilities">
+        <div class="facility-item">
+          <div class="facility-text">
+            <h3>6200 Students applied</h3>
+          </div>
+        </div>
+        <div class="facility-item">
+          <div class="facility-text">
+            <h3>1200 Admissions</h3>
+          </div>
+        </div>
+        <div class="facility-item">
+          <div class="facility-text">
+            <h3>1050 Examination</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="container-fluid">
+        <h1 style="text-align: center; margin-bottom: 38px">
+          Our Key Career Counselling Solutions
+        </h1>
+        <div class="row service1">
+          <div class="col">
+            <img
+              src="./assets/img/ser-1.png"
+              alt="Career"
+              onclick="openModal('./assets/img/ser-1.png')"
+            />
+            <p>Career</p>
+          </div>
+          <div class="col">
+            <img
+              src="./assets/img/ser-2.png"
+              alt="Well-being"
+              onclick="openModal('./assets/img/ser-2.png')"
+            />
+            <p>Well-being</p>
+          </div>
+          <div class="col">
+            <img
+              src="./assets/img/ser-3.png"
+              alt="Books and Library"
+              onclick="openModal('./assets/img/ser-3.png')"
+            />
+            <p>Books and Library</p>
+          </div>
+          <div class="col">
+            <img
+              src="./assets/img/ser-4.png"
+              alt="Logical Support"
+              onclick="openModal('./assets/img/ser-4.png')"
+            />
+            <p>Logical Support</p>
+          </div>
+          <div class="col">
+            <img
+              src="./assets/img/ser-5.png"
+              alt="Time Management"
+              onclick="openModal('./assets/img/ser-5.png')"
+            />
+            <p>Time Management</p>
+          </div>
+          <div class="col">
+            <img
+              src="./assets/img/ser-6.png"
+              alt="Personal Dashboard"
+              onclick="openModal('./assets/img/ser-6.png')"
+            />
+            <p>Personal Dashboard</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal" id="imageModal">
+        <div class="modal-content1">
+          <button class="modal-close" onclick="closeModal()">×</button>
+          <img id="modalImage" src="" alt="Modal Image" class="model-img" />
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h1 style="text-align: center; padding-top: 20px">Our Expert Teachers</h1>
+      <p style="text-align: center; padding-top: 20px; padding-bottom: 20px">
+        Meet the experienced educators ready to guide you.
+      </p>
+      <div id="teachersCarousel" class="custom-carousel-container">
+        <div class="custom-carousel-slides"></div>
+        <div class="custom-carousel-nav">
+          <button class="teacher-prev custom-prev">&#10094;</button>
+          <button class="teacher-next custom-next">&#10095;</button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container-fluid">
+        <h1 style="text-align: center; margin-bottom: 38px">
+          Service We Provide
+        </h1>
+
+        <div class="row service1">
+          <div class="col">
+            <img
+              src="./assets/img/career-1.png"
+              style="border: 1px solid black"
+              alt="Career"
+              onclick="openModal1('imageModal1', './assets/img/career-1.png')"
+            />
+            <p>Parents</p>
+          </div>
+          <div class="col">
+            <img
+              src="./assets/img/career-2.png"
+              style="border: 1px solid black"
+              alt="Well-being"
+              onclick="openModal1('imageModal2', './assets/img/career-2.png')"
+            />
+            <p>Schools</p>
+          </div>
+          <div class="col">
+            <img
+              src="./assets/img/career-3.png"
+              style="border: 1px solid black"
+              alt="Books and Library"
+              onclick="openModal1('imageModal3', './assets/img/career-3.png')"
+            />
+            <p>Institutes</p>
+          </div>
+          <div class="col">
+            <img
+              src="./assets/img/career-4.png"
+              style="border: 1px solid black"
+              alt="Logical Support"
+              onclick="openModal1('imageModal4', './assets/img/career-4.png')"
+            />
+            <p>Students</p>
+          </div>
+          <div class="col">
+            <img
+              src="./assets/img/career-5.jpg"
+              style="border: 2px solid black"
+              alt="Time Management"
+              onclick="openModal1('imageModal5', './assets/img/career-5.png')"
+            />
+            <p>Books and Library</p>
+          </div>
+          <div class="col">
+            <img
+              src="./assets/img/career-6.png"
+              style="border: 1px solid black"
+              alt="Personal Dashboard"
+              onclick="openModal1('imageModal6', './assets/img/career-6.png')"
+            />
+            <p>Counselors</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal" id="imageModal1">
+        <div class="modal-content">
+          <button class="modal-close" onclick="closeModal1('imageModal1')">
+            ×
+          </button>
+          <img id="modalImage1" src="" alt="Modal Image" />
+        </div>
+      </div>
+
+      <div class="modal" id="imageModal2">
+        <div class="modal-content">
+          <button class="modal-close" onclick="closeModal1('imageModal2')">
+            ×
+          </button>
+          <img id="modalImage2" src="" alt="Modal Image" />
+        </div>
+      </div>
+
+      <div class="modal" id="imageModal3">
+        <div class="modal-content">
+          <button class="modal-close" onclick="closeModal1('imageModal3')">
+            ×
+          </button>
+          <img id="modalImage3" src="" alt="Modal Image" />
+        </div>
+      </div>
+
+      <div class="modal" id="imageModal4">
+        <div class="modal-content">
+          <button class="modal-close" onclick="closeModal1('imageModal4')">
+            ×
+          </button>
+          <img id="modalImage4" src="" alt="Modal Image" />
+        </div>
+      </div>
+
+      <div class="modal" id="imageModal5">
+        <div class="modal-content">
+          <button class="modal-close" onclick="closeModal1('imageModal5')">
+            ×
+          </button>
+          <img id="modalImage5" src="" alt="Modal Image" />
+        </div>
+      </div>
+
+      <div class="modal" id="imageModal6">
+        <div class="modal-content">
+          <button class="modal-close" onclick="closeModal1('imageModal6')">
+            ×
+          </button>
+          <img id="modalImage6" src="" alt="Modal Image" />
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="testimonial-section">
+        <h1>App Reviews</h1>
+        <p>See what our users say about us</p>
+        <button class="btn add-review-btn" onclick="openReviewModal()">
+          Add a Review
+        </button>
+      </div>
+
+      <div class="custom-carousel-container">
+        <div class="testimonial-carousel api-testimonial-carousel">
+          <div class="testimonial-slides"></div>
+          <div class="owl-nav">
+            <button class="prev custom-prev-1">&#8592;</button>
+            <button class="next custom-next-1">&#8594;</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="reviewModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeReviewModal()">&times;</span>
+        <h2>Submit Your Review</h2>
+        <form id="reviewForm">
+          <div class="form-group">
+            <label for="reviewerName">Your Name:</label>
+            <input type="text" id="reviewerName" name="name" required />
+          </div>
+          <div class="form-group">
+            <label for="reviewerAddress">Your Location (e.g., City, State):</label>
+            <input type="text" id="reviewerAddress" name="address" required />
+          </div>
+          <div class="form-group">
+            <label for="rating">Your Rating:</label>
+            <div class="star-rating" id="starRating">
+              <span class="star" data-value="1">&#9733;</span>
+              <span class="star" data-value="2">&#9733;</span>
+              <span class="star" data-value="3">&#9733;</span>
+              <span class="star" data-value="4">&#9733;</span>
+              <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <input
+              type="hidden"
+              id="ratingValue"
+              name="rating"
+              value="0"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="reviewContent">Your Review:</label>
+            <textarea
+              id="reviewContent"
+              name="content"
+              rows="5"
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="reviewerImage">Upload Image (Optional):</label>
+            <input
+              type="file"
+              id="reviewerImage"
+              name="image"
+              accept="image/*"
+            />
+          </div>
+          <button type="submit">Submit Review</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="toast" class="toast">Review submitted successfully!</div>
+
+    <div class="footer">
+      <div class="Footer-inner">
+        <div class="footer-section">
+          <h5>About Us</h5>
+          <p><a href="#">Terms of Service</a></p>
+          <p><a href="#">Privacy Policy</a></p>
+          <p><a href="./contact.html">Contact Us</a></p>
+          <p><a href="#">Partners</a></p>
+        </div>
+
+        <div class="footer-section">
+          <h5>Company</h5>
+          <p><a href="./index.html">Home</a></p>
+          <p><a href="./about.html">About us</a></p>
+          <p><a href="#">Our Team</a></p>
+        </div>
+
+        <div class="footer-section">
+          <h5>Services</h5>
+          <p><a href="#">Career guide</a></p>
+          <p><a href="#">Psychometric test</a></p>
+          <p><a href="#">Skill based test</a></p>
+          <p><a href="#">Course Details</a></p>
+        </div>
+
+        <div class="footer-section">
+          <h5>Social Media</h5>
+          <div class="social-icons">
+            <a href="https://www.instagram.com/" target="blank"
+              ><i class="fab fa-instagram"></i
+            ></a>
+            <a href="https://www.facebook.com/" target="blank"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a href="https://x.com/" target="blank"
+              ><i class="bi bi-twitter-x"></i
+            ></a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h5>Stay up to date</h5>
+          <p>Be the first to know about our newest apartments</p>
+          <form class="subscribe">
+            <input
+              type="email"
+              placeholder="Your email"
+              name="email"
+              required
+            />
+            <button type="submit">Subscribe</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="copyright">
+        <p>&copy; 2025 Mind Ease. All Rights Reserved.</p>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+      const Base_Url = "localhost"; // use your localhost or ip address
+      // Existing carousel script
+      $(document).ready(function () {
+        var currentIndex = 0;
+        var items = $(".carousel-item");
+        var totalItems = items.length;
+
+        // Function to go to a specific slide
+        function goToSlide(index) {
+          if (index < 0) index = totalItems - 1; // Loop to last slide
+          if (index >= totalItems) index = 0; // Loop to first slide
+
+          // Animate to the next slide
+          $(".carousel-items").css(
+            "transform",
+            "translateX(" + -index * 100 + "%)"
+          );
+          currentIndex = index;
+        }
+
+        // Next button functionality
+        $(".next").click(function () {
+          goToSlide(currentIndex + 1);
+        });
+
+        // Previous button functionality
+        $(".prev").click(function () {
+          goToSlide(currentIndex - 1);
+        });
+
+        // Autoplay functionality
+        setInterval(function () {
+          goToSlide(currentIndex + 1);
+        }, 5000); // Change slide every 5 seconds
+
+        // Show the first slide on load
+        goToSlide(currentIndex);
+      });
+
+      // Existing custom carousel script (for general carousels, not reviews)
+      $(document).ready(function () {
+        var currentIndex = 0;
+        var $carouselSlides = $(".custom-carousel-slides");
+        var $carouselSlide = $(".custom-carousel-slide");
+        var totalSlides = $carouselSlide.length;
+        var slideWidth = $carouselSlide.outerWidth(true);
+
+        // Set the total width of the slides container
+        $carouselSlides.width(slideWidth * totalSlides);
+
+        // Function to go to a specific slide
+        function goToSlide(index) {
+          if (index < 0) index = totalSlides - 1; // Loop to last slide
+          if (index >= totalSlides) index = 0; // Loop to first slide
+
+          // Animate to the next slide
+          $carouselSlides.css(
+            "transform",
+            "translateX(" + -index * slideWidth + "px)"
+          );
+          currentIndex = index;
+        }
+
+        // Next button functionality
+        $(".custom-next").click(function () {
+          goToSlide(currentIndex + 1);
+        });
+
+        // Previous button functionality
+        $(".custom-prev").click(function () {
+          goToSlide(currentIndex - 1);
+        });
+
+        // Auto play functionality (change slides every 3 seconds)
+        setInterval(function () {
+          goToSlide(currentIndex + 1);
+        }, 3000); // Change slide every 3 seconds
+
+        // Show the first slide on load
+        goToSlide(currentIndex);
+      });
+
+      // --- Start of combined and new JavaScript for Reviews & Teachers ---
+
+      // Toggle mobile menu
+      function toggleMenu() {
+        const navbarNav = document.querySelector(".navbar-nav");
+        navbarNav.classList.toggle("active");
+      }
+
+      // Modal functions for service images
+      function openModal(imageSrc) {
+        var modal = document.getElementById("imageModal");
+        var modalImg = document.getElementById("modalImage");
+        modal.style.display = "block";
+        modalImg.src = imageSrc;
+      }
+
+      function closeModal() {
+        var modal = document.getElementById("imageModal");
+        modal.style.display = "none";
+      }
+
+      // Modal functions for career images
+      function openModal1(modalId, imageSrc) {
+        var modal = document.getElementById(modalId);
+        var modalImg = modal.querySelector("img");
+        modal.style.display = "flex"; // Use flex to center
+        modalImg.src = imageSrc;
+      }
+
+      function closeModal1(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "none";
+      }
+
+      // Star Rating Logic
+      document.querySelectorAll(".star").forEach((star) => {
+        star.addEventListener("click", function () {
+          const rating = parseInt(this.getAttribute("data-value"));
+          document.getElementById("ratingValue").value = rating;
+
+          // Reset all stars
+          document.querySelectorAll(".star").forEach((s) => {
+            s.classList.remove("selected");
+          });
+
+          // Highlight selected stars
+          for (let i = 1; i <= rating; i++) {
+            document
+              .querySelector(`.star[data-value="${i}"]`)
+              .classList.add("selected");
+          }
+        });
+      });
+
+      // Toast Message Logic
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 3000); // Hide after 3 seconds
+      }
+
+      // Teacher Carousel Logic
+      let teacherCarouselIndex = 0;
+      let $teacherCarouselSlides;
+      let $teacherCarouselSlide;
+      let totalTeacherSlides;
+      let teacherSlideWidth;
+      let teacherCarouselInterval;
+
+      // Function to initialize/re-initialize the teacher carousel
+      function initializeTeacherCarousel() {
+        $teacherCarouselSlides = $("#teachersCarousel .custom-carousel-slides");
+        $teacherCarouselSlide = $("#teachersCarousel .custom-carousel-slide");
+        totalTeacherSlides = $teacherCarouselSlide.length;
+
+        if (totalTeacherSlides === 0) {
+          console.warn("No teacher slides to initialize carousel.");
+          return;
+        }
+
+        teacherSlideWidth = $teacherCarouselSlide.outerWidth(true);
+        $teacherCarouselSlides.width(teacherSlideWidth * totalTeacherSlides);
+
+        // Reset index if needed
+        if (teacherCarouselIndex >= totalTeacherSlides) {
+          teacherCarouselIndex = 0;
+        }
+
+        // Function to go to a specific slide for teachers carousel
+        function goToTeacherSlide(index) {
+          if (index < 0) index = totalTeacherSlides - 1;
+          if (index >= totalTeacherSlides) index = 0;
+
+          $teacherCarouselSlides.css(
+            "transform",
+            "translateX(" + -index * teacherSlideWidth + "px)"
+          );
+          teacherCarouselIndex = index;
+        }
+
+        // Clear previous event listeners to prevent duplicates
+        $("#teachersCarousel .teacher-next")
+          .off("click")
+          .click(function () {
+            goToTeacherSlide(teacherCarouselIndex + 1);
+          });
+
+        $("#teachersCarousel .teacher-prev")
+          .off("click")
+          .click(function () {
+            goToTeacherSlide(teacherCarouselIndex - 1);
+          });
+
+        // Clear any existing autoplay interval before setting a new one
+        if (teacherCarouselInterval) {
+          clearInterval(teacherCarouselInterval);
+        }
+        teacherCarouselInterval = setInterval(function () {
+          goToTeacherSlide(teacherCarouselIndex + 1);
+        }, 3000); // Change slide every 3 seconds
+
+        goToTeacherSlide(teacherCarouselIndex); // Show the first slide on load/re-init
+      }
+
+      // Function to fetch and display teachers from the API
+      async function fetchAndDisplayTeachers() {
+        const teachersCarouselSlidesContainer = document.querySelector(
+          "#teachersCarousel .custom-carousel-slides"
+        );
+        teachersCarouselSlidesContainer.innerHTML = ""; // Clear existing static content
+
+        try {
+          const response = await fetch(
+            `http://${Base_Url}/Sample_php/api/teacher.php`
+          );
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          const teachers = await response.json();
+
+          if (teachers.length === 0) {
+            teachersCarouselSlidesContainer.innerHTML =
+              '<p style="text-align: center; margin-top: 20px;">No teacher information available.</p>';
+            return;
+          }
+
+          teachers.forEach((teacher) => {
+            const teacherSlide = document.createElement("div");
+            teacherSlide.classList.add("custom-carousel-slide");
+
+            teacherSlide.innerHTML = `
+              <div class="post-img class="h-[100px] w-[100px] border">
+                <img src="${teacher.image}" alt="${
+              teacher.name
+            } " class="h-20 w-50 border" />
+              </div>
+              <div class="custom-carousel-content">
+                <h3 class="post-title">${teacher.name || "Unknown Teacher"}</h3>
+                <p class="post-subtitle">${teacher.title || "Professor"} ${
+              teacher.college ? "@" + teacher.college : ""
+            }</p>
+                <span class="post-date text-warning">${
+                  teacher.subject || "General"
+                }</span>
+                <a href="${
+                  teacher.linkedin_url || "#"
+                }" class="read-more fab fa-linkedin text-decoration-none"></a>
+              </div>
+            `;
+            teachersCarouselSlidesContainer.appendChild(teacherSlide);
+          });
+
+          // Initialize the teacher carousel after all slides are added
+          initializeTeacherCarousel();
+        } catch (error) {
+          console.error("Error fetching teachers:", error);
+          teachersCarouselSlidesContainer.innerHTML =
+            '<p style="text-align: center; margin-top: 20px; color: red;">Failed to load teacher information. Please try again later.</p>';
+        }
+      }
+
+      // Function to open the review submission modal
+      function openReviewModal() {
+        document.getElementById("reviewModal").style.display = "flex";
+      }
+
+      // Function to close the review submission modal
+      function closeReviewModal() {
+        document.getElementById("reviewModal").style.display = "none";
+        document.getElementById("reviewForm").reset(); // Clear form on close
+        // Reset star ratings
+        document.querySelectorAll(".star").forEach((star) => {
+          star.classList.remove("selected");
+        });
+        document.getElementById("ratingValue").value = "0";
+      }
+
+      // Handle review form submission
+      document
+        .getElementById("reviewForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Prevent default form submission
+          const formData = new FormData(this);
+          // Explicitly convert rating to an integer
+          const rating = parseInt(formData.get("rating"));
+          if (isNaN(rating) || rating < 1 || rating > 5) {
+            showToast("Please select a valid rating (1-5 stars).");
+            return;
+          }
+          // Create a new FormData object to ensure rating is sent as an integer
+          const modifiedFormData = new FormData();
+          modifiedFormData.append("name", formData.get("name"));
+          modifiedFormData.append("address", formData.get("address"));
+          modifiedFormData.append("ratings", rating); // Send as integer
+          modifiedFormData.append("content", formData.get("content"));
+          if (formData.get("image")) {
+            modifiedFormData.append("image", formData.get("image"));
+          }
+          await submitReview(modifiedFormData);
+        });
+
+      async function submitReview(formData) {
+        try {
+          const response = await fetch(
+            `http://${Base_Url}/Sample_php/api/review.php`,
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+          const result = await response.json();
+          if (response.ok) {
+            showToast("Review submitted successfully!");
+            closeReviewModal();
+            fetchAndDisplayReviews();
+          } else {
+            showToast(
+              "Error submitting review: " + (result.message || "Unknown error")
+            );
+            console.error("Error submitting review:", result);
+          }
+        } catch (error) {
+          showToast(
+            "An error occurred while submitting your review. Please try again."
+          );
+          console.error("Fetch error:", error);
+        }
+      }
+
+      // Testimonial Carousel for API Reviews Logic
+      let apiReviewCarouselIndex = 0;
+      let $apiReviewCarouselSlidesContainer;
+      let $apiReviewCarouselItems;
+      let totalApiReviewItems;
+      let apiReviewSlideWidth;
+      let apiReviewCarouselInterval;
+
+      function initializeApiReviewCarousel() {
+        $apiReviewCarouselSlidesContainer = $(
+          ".api-testimonial-carousel .testimonial-slides"
+        );
+        $apiReviewCarouselItems = $(
+          ".api-testimonial-carousel .testimonial-item"
+        );
+        totalApiReviewItems = $apiReviewCarouselItems.length;
+
+        if (totalApiReviewItems === 0) {
+          console.warn("No API review slides to initialize carousel.");
+          return;
+        }
+
+        // Calculate slide width based on the first item
+        apiReviewSlideWidth = $apiReviewCarouselItems.first().outerWidth(true);
+        $apiReviewCarouselSlidesContainer.width(
+          apiReviewSlideWidth * totalApiReviewItems
+        );
+
+        if (apiReviewCarouselIndex >= totalApiReviewItems) {
+          apiReviewCarouselIndex = 0;
+        }
+
+        function goToApiReviewSlide(index) {
+          if (index < 0) index = totalApiReviewItems - 1;
+          if (index >= totalApiReviewItems) index = 0;
+
+          $apiReviewCarouselSlidesContainer.css(
+            "transform",
+            "translateX(" + -index * apiReviewSlideWidth + "px)"
+          );
+          apiReviewCarouselIndex = index;
+        }
+
+        // Clear previous event listeners to prevent duplicates
+        $(".api-testimonial-carousel .custom-next-1")
+          .off("click")
+          .click(function () {
+            goToApiReviewSlide(apiReviewCarouselIndex + 1);
+          });
+
+        $(".api-testimonial-carousel .custom-prev-1")
+          .off("click")
+          .click(function () {
+            goToApiReviewSlide(apiReviewCarouselIndex - 1);
+          });
+
+        if (apiReviewCarouselInterval) {
+          clearInterval(apiReviewCarouselInterval);
+        }
+        apiReviewCarouselInterval = setInterval(function () {
+          goToApiReviewSlide(apiReviewCarouselIndex + 1);
+        }, 5000); // Change slide every 5 seconds
+
+        goToApiReviewSlide(apiReviewCarouselIndex);
+      }
+
+      // Function to fetch and display reviews from the API
+      async function fetchAndDisplayReviews() {
+        const reviewsContainer = document.querySelector(
+          ".api-testimonial-carousel .testimonial-slides"
+        );
+        reviewsContainer.innerHTML = ""; // Clear existing content
+
+        try {
+          const response = await fetch(
+            `http://${Base_Url}/Sample_php/api/review.php`
+          );
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          const reviews = await response.json();
+
+          if (reviews.length === 0) {
+            reviewsContainer.innerHTML =
+              '<p style="text-align: center; margin-top: 20px;">No reviews yet. Be the first to leave one!</p>';
+            return;
+          }
+
+          reviews.forEach((review) => {
+            const reviewItem = document.createElement("div");
+            reviewItem.classList.add("testimonial-item");
+
+            // Default image if review.image is empty or null
+            const imageUrl =
+              review.image &&
+              review.image !== "null" &&
+              review.image.includes("/")
+                ? `http://${Base_Url}/Sample_php/uploads/${review.image}`
+                : "./assets/img/default-logo.png";
+
+            reviewItem.innerHTML = `
+              <div class="d-flex align-items-center">
+                <img src="${review.image || "./assets/img/default-logo.png"}" alt="${
+              review.name || "Anonymous"
+            }'s review image" />
+                <div>
+                  <h3>${review.name || "Anonymous"}</h3>
+                  <span>${review.address || "N/A"}</span>
+                  <p>"${review.content || "No review content provided."}"</p>
+                </div>
+              </div>
+            `;
+            reviewsContainer.appendChild(reviewItem);
+          });
+
+          // Re-initialize the API review carousel after new items are added
+          initializeApiReviewCarousel();
+        } catch (error) {
+          console.error("Error fetching reviews:", error);
+          reviewsContainer.innerHTML =
+            '<p style="text-align: center; margin-top: 20px; color: red;">Failed to load reviews. Please try again later.</p>';
+        }
+      }
+
+      // Call the functions to fetch and display data when the DOM is fully loaded
+      $(document).ready(function () {
+        fetchAndDisplayTeachers();
+        fetchAndDisplayReviews();
+      });
+    </script>
+  </body>
+</html>

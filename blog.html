@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind ease - Blog Page</title>
+
+    <!-- Standard favicon -->
+    <link rel="icon" type="image/x-icon" href="./assets/img/logo-2.png">
+    <link rel="icon" type="image/png" href="./assets/img/logo-2.png" sizes="32x32">
+    <link rel="icon" type="image/svg+xml" href="./assets/img/logo-2.png">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@600&family=Lobster+Two:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="./assets/css/blog.css">
+</head>
+<body>
+
+<!-- navbar started here -->
+<nav class="navbar">
+    <a href="home.html" class="navbar-brand">
+        <img src="./assets/img/logo-2.png" alt="Logo">
+    </a>
+    <div class="hamburger" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <ul class="navbar-nav">
+        <li><a href="./index.html" class="nav-link">Home</a></li>
+        <li><a href="./blog.html" class="nav-link active">Blog</a></li>
+        <li><a href="./about.html" class="nav-link ">About Us</a></li>
+        <li><a href="./contact.html" class="nav-link ">Contact Us</a></li>
+        <div class="register-container-1">
+            <a href="./register.html" class="nav-link btn">Register</a>
+        </div>
+    </ul>
+    <div class="register-container">
+        <a href="./login.html" class="nav-link btn">Login</a>
+    </div>
+</nav>
+<!-- navbar end here -->
+
+<!-- blog-heading-1 start -->
+<div class="sec-head-blog">
+    <h2>Our Effective and Daily Blog</h2>
+</div>
+<!-- blog-heading-1 end -->
+
+<!-- carousel section -->
+<section>
+    <div class="carousel-container-unique">
+        <div id="track" class="carousel-track-unique flex gap-4 overflow-x-auto scroll-smooth px-4 py-6">
+            <!-- Static items as fallback (optional) -->
+            
+        </div>
+    </div>
+
+    <div class="carousel-dots-unique" style="padding-bottom: 50px;">
+        <!-- Dots will be appended here -->
+    </div>
+</section>
+<!-- carousel end -->
+
+<!-- blog-heading-2 start -->
+<div class="sec-head-blog-1">
+    <h2>In the News</h2>
+</div>
+
+<div class="wrapper">
+    <img src="./assets/img/blog3-removebg-preview.png" alt="" class="item item1">
+    <img src="./assets/img/blog2-removebg-preview.png" alt="" class="item item2">
+    <img src="./assets/img/blog_4-removebg-preview.png" alt="" class="item item3">
+    <img src="./assets/img/blog_5-removebg-preview.png" alt="" class="item item4">
+    <img src="./assets/img/blog_6-removebg-preview.png" alt="" class="item item5">
+    <img src="./assets/img/blog_7-removebg-preview.png" alt="" class="item item6">
+    <img src="./assets/img/blog_-removebg-preview.png" alt="" class="item item7">
+</div>
+<!-- blog-heading-2 end -->
+
+<!-- footer started here -->
+<div class="footer">
+    <div class="Footer-inner">
+        <div class="footer-section">
+            <h5>About Us</h5>
+            <p><a href="#">Terms of Service</a></p>
+            <p><a href="#">Privacy Policy</a></p>
+            <p><a href="./contact.html">Contact Us</a></p>
+            <p><a href="#">Partners</a></p>
+        </div>
+
+        <div class="footer-section">
+            <h5>Company</h5>
+            <p><a href="./index.html">Home</a></p>
+            <p><a href="./about.html">About us</a></p>
+            <p><a href="#">Our Team</a></p>
+        </div>
+
+        <div class="footer-section">
+            <h5>Services</h5>
+            <p><a href="#">Career guide</a></p>
+            <p><a href="#">Psychometric test</a></p>
+            <p><a href="#">Skill based test</a></p>
+            <p><a href="#">Course Details</a></p>
+        </div>
+
+        <div class="footer-section">
+            <h5>Social Media</h5>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/" target="blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/" target="blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://x.com/" target="blank"><i class="bi bi-twitter-x"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-section">
+            <h5>Stay up to date</h5>
+            <p>Be the first to know about our newest apartments</p>
+            <form class="subscribe">
+                <input type="email" placeholder="Your email" name="email" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="copyright">
+        <p>&copy; 2025 Mind Ease. All Rights Reserved.</p>
+    </div>
+</div>
+<!-- footer end -->
+
+<!-- Scripts -->
+<script src="./assets/js/script.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    const Base_Url ="localhost"
+    let currentIndex = 0;
+    let items = $(".carousel-item-unique");
+    const track = $(".carousel-track-unique");
+    const dotsContainer = $(".carousel-dots-unique");
+
+    function createDots() {
+        dotsContainer.empty();
+        items.each((i) => {
+            const dot = $('<div class="carousel-dot-unique"></div>');
+            dot.on('click', () => moveToItem(i));
+            dotsContainer.append(dot);
+        });
+        updateDots();
+    }
+
+    function moveToItem(index) {
+        currentIndex = index;
+        updateCarouselPosition();
+        updateDots();
+    }
+
+    function updateCarouselPosition() {
+        const itemWidth = $(".carousel-item-unique").outerWidth(true);
+        const newTransformValue = -currentIndex * itemWidth;
+        track.css("transform", "translateX(" + newTransformValue + "px)");
+    }
+
+    function updateDots() {
+        $(".carousel-dot-unique").removeClass("active");
+        $(".carousel-dot-unique").eq(currentIndex).addClass("active");
+    }
+
+    function moveToNext() {
+        if (currentIndex < items.length - 1) {
+            currentIndex++;
+        } else {
+            currentIndex = 0;
+        }
+        updateCarouselPosition();
+        updateDots();
+    }
+
+    setInterval(moveToNext, 3000);
+
+    // Fetch blogs from API and update carousel
+    fetch(`http://${Base_Url}/Sample_php/api/blog.php`)
+    .then((response) => response.json())
+    .then((data) => {
+        const track = $("#track");
+        track.empty(); // clear existing items
+        data.forEach((blog, index) => {
+            const blogItem = $(`
+                <div class="carousel-item-unique w-64 h-64 flex-shrink-0 bg-white rounded-xl shadow hover:shadow-lg transition duration-300 overflow-hidden flex flex-col justify-between">
+
+                    <img src="${blog.cover}" alt="Blog Image" class="w-full h-2/3 object-cover">
+                    <div class="flex flex-col justify-center items-center h-1/3 p-4 bg-gray-50">
+                        <h6 class="text-lg font-semibold mb-1 text-center">${blog.heading}</h6>
+                        <a href="blog-details.html?id=${blog.id}" class="text-teal-500 font-medium hover:underline">Click Here</a>
+                    </div>
+                </div>
+            `);
+            track.append(blogItem);
+        });
+
+        items = $(".carousel-item-unique");
+        currentIndex = 0;
+        createDots();
+    })
+    .catch((error) => {
+        console.error("Error fetching blogs:", error);
+    });
+
+    createDots();
+</script>
+
+</body>
+</html>

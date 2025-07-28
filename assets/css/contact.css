@@ -1,0 +1,497 @@
+h1{
+    font-size: 2.1rem;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+
+/* Navbar Styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .navbar-brand img {
+    height: 80px;
+    padding-left: 25px;
+}
+
+/* Navbar Links Styles */
+.navbar .navbar-nav {
+    display: flex;
+    justify-content: center; /* Center the nav links */
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1; /* Allow the navbar links to take up remaining space */
+}
+
+.navbar .navbar-nav .nav-link {
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.navbar .navbar-nav .nav-link:hover,
+.navbar .navbar-nav .nav-link.active {
+    color: #43CAC2;
+}
+
+/* Register Button Styles */
+.navbar .btn {
+    background-color: #43CAC2;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.navbar .btn:hover {
+    background-color: #35b8a5;
+}
+
+/* Align the Register Button to the right */
+.navbar .register-container {
+    margin-left: auto; /* Moves the Register button to the right */
+}
+
+.navbar .register-container-1 {
+   display: none;
+}
+
+/* Mobile View */
+@media (max-width: 768px) {
+    .navbar .navbar-nav {
+        display: none; /* Hide navigation links by default */
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background-color: white;
+        flex-direction: column;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .navbar .register-container {
+        display: none;
+  
+}
+
+.navbar .register-container-1 {
+display: block;
+margin-top: 25px;
+}
+    .navbar .navbar-nav.show {
+        display: flex; /* Show the nav links when toggled */
+        margin-top: 44px;
+    }
+
+    .navbar .navbar-nav .nav-link {
+        padding: 12px 20px;
+        text-align: center;
+        width: 100%;
+    }
+
+    .navbar .hamburger {
+        display: block;
+        cursor: pointer;
+    }
+
+    .navbar .hamburger div {
+        width: 25px;
+        height: 3px;
+        background-color: #333;
+        margin: 5px 0;
+    }
+}
+
+/* Hide hamburger menu on larger screens */
+@media (min-width: 769px) {
+    .navbar .hamburger {
+        display: none;
+    }
+    
+}
+
+/* Mobile screen styles */
+@media (max-width: 768px) {
+    .navbar-nav {
+        display: block; 
+        text-align: center;  /* Center-align text */
+    }
+
+    .navbar-nav li {
+        margin-bottom: 20px;  /* Add space between items when stacked vertically */
+    }
+
+    .navbar-nav .register-container-1 {
+        margin-top: 10px;  /* Add spacing between register button and nav items */
+    }
+
+    /* You can also change link color if needed */
+    .nav-link {
+        color: blue;
+    }
+}
+
+
+
+
+
+/* Footer Styling */
+.footer {
+    background-color: #FFDA8C;
+    padding: 50px 10%;
+    color: rgb(0, 0, 0);
+}
+
+.Footer-inner {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Default: 5 columns */
+    gap: 20px;
+}
+
+.footer h5 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.footer p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.footer .footer-section {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Links styling */
+.footer p a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+}
+
+.footer p a:hover {
+    color: #43CAC2;
+}
+
+/* Social media buttons */
+.footer .social-icons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.footer .social-icons a {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 50%;
+    color: #000;
+    transition: 0.3s;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.footer .social-icons a:hover {
+    background-color: #43CAC2;
+    color: white;
+}
+
+/* Input field */
+.footer .subscribe {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.footer .subscribe input[type="email"] {
+    padding: 12px 20px;
+    border: none;
+    width: 100%;
+    border-radius: 25px;
+    background-color: #E4E4E4;
+    color: #43CAC2;
+    font-size: 14px;
+}
+
+.footer .subscribe button {
+    padding: 12px 20px;
+    border: none;
+    background-color: #43CAC2;
+    color: white;
+    border-radius: 25px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.footer .subscribe button:hover {
+    background-color: #36b5a9;
+}
+
+.footer .copyright {
+    font-size: 15px;
+    margin-top: 30px;
+    text-align: center; /* Center-align the copyright */
+}
+
+.footer .footer-menu {
+    display: flex;
+    gap: 15px;
+}
+
+.footer .footer-menu a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+.footer .footer-menu a:hover {
+    color: #43CAC2;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .footer {
+        padding: 30px 5%;
+    }
+
+    .Footer-inner {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns on medium screens */
+    }
+
+    .footer .footer-section {
+        margin-bottom: 30px;
+    }
+
+    .footer .subscribe {
+        flex-direction: column;
+        width: 100%; /* Full width on smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 30px 5%;
+    }
+
+    .Footer-inner {
+        grid-template-columns: 1fr; /* 1 column on small screens */
+    }
+
+    .footer .footer-section {
+        text-align: center;
+    }
+
+    .footer .social-icons {
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .footer .subscribe {
+        flex-direction: column; /* Stack the input and button */
+        gap: 10px;
+        width: 100%;
+    }
+
+    .footer .subscribe input[type="email"], .footer .subscribe button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 20px 5%;
+    }
+
+    .Footer-inner {
+        grid-template-columns: 1fr; /* 1 column on very small screens */
+    }
+
+    .footer .footer-section {
+        text-align: center;
+    }
+
+    .footer .social-icons {
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .footer .subscribe {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .footer .subscribe input[type="email"], .footer .subscribe button {
+        width: 100%;
+    }
+}
+
+
+
+
+
+
+
+
+  /* contact page */
+
+
+  .contact-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.contact-section {
+    background-color: #f8f9fa;
+    padding: 50px 0;
+}
+
+.contact-section h1,
+.contact-section h4 {
+    color: #43CAC2;
+}
+
+/* Grid layout */
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+}
+
+.contact-box {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: white;
+}
+
+.flex-display {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.icon-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #43CAC2;
+ 
+}
+
+.floating-form {
+    margin-bottom: 20px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #43CAC2;
+}
+
+.submit-btn {
+    padding: 15px;
+    width: 100%;
+    background-color: #43CAC2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.submit-btn:hover {
+    background-color: #39b4a6;
+}
+
+.map-container {
+    grid-column: span 2;
+}
+
+iframe {
+    width: 100%;
+    height: 500px;
+    border: none;
+    border-radius: 8px;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px 0;
+    background-color: #35b8a5;
+}
+
+.social-links a {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: #35b8a5;
+}
+
+.social-links a:hover {
+    background-color: #43CAC2;
+    color: white;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .map-container {
+        grid-column: span 1;
+    }
+}
+
+

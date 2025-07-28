@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind ease - Blog Page</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="./assets/img/logo-2.png">
+    <link rel="icon" type="image/png" href="./assets/img/logo-2.png" sizes="32x32">
+    <link rel="icon" type="image/svg+xml" href="./assets/img/logo-2.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@600&family=Lobster+Two:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Icons & Styles -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="./assets/css/blog.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <a href="home.html" class="navbar-brand">
+        <img src="./assets/img/logo-2.png" alt="Logo">
+    </a>
+    <div class="hamburger" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <ul class="navbar-nav">
+        <li><a href="./index.html" class="nav-link">Home</a></li>
+        <li><a href="./blog.html" class="nav-link active">Blog</a></li>
+        <li><a href="./about.html" class="nav-link">About Us</a></li>
+        <li><a href="./contact.html" class="nav-link">Contact Us</a></li>
+        <div class="register-container-1">
+            <a href="./register.html" class="nav-link btn">Register</a>
+        </div>
+    </ul>
+    <div class="register-container">
+        <a href="./login.html" class="nav-link btn">Login</a>
+    </div>
+</nav>
+<!-- Navbar End -->
+
+<!-- Blog Details Section -->
+<section id="blog-details" style="padding: 40px 20px;">
+    <div class="container">
+        <h1 id="blog-heading" style="text-align: center; font-size: 28px; margin-bottom: 20px;"></h1>
+
+        <div class="blog-1-img-container" style="text-align: center; margin: 20px 0;">
+            <img id="blog-image" class="blog-1-img" src="" alt="Blog image" style="max-width: 100%; border-radius: 8px;">
+        </div>
+        <div style="text-align: center; margin: 30px 0;">
+            <h2 style="font-size: 24px; font-weight: 600;">What you'll find here</h2>
+        </div>
+        <div class="content" style="max-width: 1000px; margin: auto; line-height: 1.6;">
+            <p id="blog-description"></p>
+        </div>
+    </div>
+</section>
+<!-- Blog Section End -->
+
+<!-- Footer -->
+<div class="footer">
+    <div class="Footer-inner">
+        <div class="footer-section">
+            <h5>About Us</h5>
+            <p><a href="#">Terms of Service</a></p>
+            <p><a href="#">Privacy Policy</a></p>
+            <p><a href="./contact.html">Contact Us</a></p>
+            <p><a href="#">Partners</a></p>
+        </div>
+
+        <div class="footer-section">
+            <h5>Company</h5>
+            <p><a href="./index.html">Home</a></p>
+            <p><a href="./about.html">About us</a></p>
+            <p><a href="#">Our Team</a></p>
+        </div>
+
+        <div class="footer-section">
+            <h5>Services</h5>
+            <p><a href="#">Career guide</a></p>
+            <p><a href="#">Psychometric test</a></p>
+            <p><a href="#">Skill based test</a></p>
+            <p><a href="#">Course Details</a></p>
+        </div>
+
+        <div class="footer-section">
+            <h5>Social Media</h5>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/" target="blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/" target="blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://x.com/" target="blank"><i class="bi bi-twitter-x"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-section">
+            <h5>Stay up to date</h5>
+            <p>Be the first to know about our newest apartments</p>
+            <form class="subscribe">
+                <input type="email" placeholder="Your email" name="email" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="copyright">
+        <p>&copy; 2025 Mind Ease. All Rights Reserved.</p>
+    </div>
+</div>
+<!-- Footer End -->
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const Base_url = "localhost"
+    // Get blog ID from URL
+    const params = new URLSearchParams(window.location.search);
+    const blogId = params.get("id");
+
+    if (!blogId) {
+        document.getElementById("blog-heading").textContent = "Blog not found.";
+    } else {
+        fetch(`http://${Base_url}/Sample_php/api/blog.php?id=${blogId}`)
+            .then(res => res.json())
+            .then(blog => {
+                document.getElementById("blog-heading").textContent = blog.heading;
+                document.getElementById("blog-image").src = blog.cover;
+                document.getElementById("blog-description").textContent = blog.description;
+            })
+            .catch(err => {
+                console.error("Failed to load blog details", err);
+                document.getElementById("blog-heading").textContent = "Failed to load blog.";
+            });
+    }
+</script>
+
+</body>
+</html>

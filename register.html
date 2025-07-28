@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mind ease case -Register Page</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="./assets/img/logo-2.png" />
+  <link rel="icon" type="image/png" href="./assets/img/logo-2.png" sizes="32x32" />
+  <link rel="icon" type="image/svg+xml" href="./assets/img/logo-2.png" />
+
+  <!-- Custom Styles -->
+  <style>
+    /* Your CSS remains unchanged */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Heebo', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .login-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .login-left {
+      position: relative;
+      width: 100%;
+      display: flex;
+    }
+
+    .login-left img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .over-layout {
+      position: absolute;
+      left: 10%;
+      top: 5%;
+      width: 80%;
+    }
+
+    .login-right {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 15%;
+      padding: 40px;
+      background-color: #fff;
+      width: 100%;
+      max-width: 600px;
+      box-sizing: border-box;
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .login-logo img {
+      max-width: 150px;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      width: 100%;
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      padding: 0 10px;
+      pointer-events: none;
+    }
+
+    .form-control {
+      width: 100%;
+      padding-left: 50px !important;
+      padding-right: 10px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+
+    .form-control::placeholder {
+      color: #aaa;
+    }
+
+    .btn-login {
+      background: #2cc3bd;
+      color: #fff;
+      border-radius: 30px;
+      width: 100%;
+      font-weight: bold;
+      transition: 0.3s;
+      padding: 15px;
+      border: none;
+      margin-top: 15px;
+    }
+
+    .btn-login:hover {
+      background: #249b94;
+    }
+
+    .terms {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    .terms a {
+      color: #2cc3bd;
+      text-decoration: none;
+    }
+
+    .terms a:hover {
+      text-decoration: underline;
+    }
+
+    .input-group-text {
+      border-right: none;
+      background-color: transparent;
+      color: #ddd;
+      font-size: 25px;
+      padding: 10px;
+    }
+
+    .input-group input {
+      flex: 1;
+      border-radius: 10px;
+      padding: 4px 20px;
+      border: 1px solid #ddd;
+    }
+
+    .error-message {
+      font-size: 13px;
+      color: red;
+      margin-top: 5px;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .login-container {
+        grid-template-columns: 1fr;
+      }
+
+      .login-left {
+        display: none;
+      }
+
+      .login-right {
+        padding: 30px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .login-right {
+        padding: 20px;
+        padding-top: 10px;
+        width: 100%;
+        max-width: 900px;
+      }
+
+      .login-logo img {
+        max-width: 120px;
+      }
+
+      .form-control {
+        padding: 8px 15px;
+      }
+
+      .input-group-text {
+        font-size: 20px;
+      }
+    }
+
+    @media screen and (min-width: 769px) and (max-width: 1024px) {
+      .login-right {
+        width: 50%;
+        padding: 40px;
+        max-width: 900px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .terms {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .terms a {
+        margin-top: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <!-- Left Side -->
+    <div class="login-left">
+      <img src="./assets/img/login-bg.png" alt="Login Illustration" />
+      <div class="over-layout">
+        <img src="./assets/img/reg-frame-1.png" alt="Overlay" />
+      </div>
+    </div>
+
+    <!-- Right Side -->
+    <div class="login-right">
+      <div class="login-logo">
+        <img src="./assets/img/logo-1.png" alt="Mind Ease Logo" />
+      </div>
+
+      <form id="registerForm" action="../server/register.php" method="POST" onsubmit="return validateRegisterForm()">
+        <div class="input-group">
+          <div class="input-icon"><i class="fas fa-user" style="color: #ddd;"></i></div>
+          <input type="text" name="name" class="form-control" placeholder="Full Name" required />
+        </div>
+        <div class="input-group">
+          <div class="input-icon"><i class="fas fa-phone" style="color: #ddd;"></i></div>
+          <input type="tel" name="phone" class="form-control" placeholder="Phone Number" required />
+        </div>
+        <div class="input-group">
+          <div class="input-icon"><i class="fas fa-envelope" style="color: #ddd;"></i></div>
+          <input type="email" name="email" class="form-control" placeholder="Email" required />
+        </div>
+        <div class="input-group">
+          <div class="input-icon"><i class="fas fa-key" style="color: #ddd;"></i></div>
+          <input type="password" name="password" class="form-control" placeholder="Password" required />
+        </div>
+        <div class="input-group">
+          <div class="input-icon"><i class="fas fa-key" style="color: #ddd;"></i></div>
+          <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" required />
+        </div>
+        <div class="terms">
+          <div>
+            <input type="checkbox" id="terms" required />
+            <label for="terms">Agree to Terms & Conditions</label>
+          </div>
+        </div>
+        <button type="submit" class="btn-login">Submit</button>
+      </form>
+
+      <div class="terms mt-3">
+        <p>Already have an account? <a href="./login.html">Login here</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS Validation & Redirect -->
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("registerForm");
+
+    const inputs = {
+        name: {
+            input: form.querySelector('input[name="name"]'),
+            pattern: /^[A-Za-z\s]+$/,
+            message: "Name should contain only letters and spaces."
+        },
+        phone: {
+            input: form.querySelector('input[name="phone"]'),
+            pattern: /^[0-9]{10}$/,
+            message: "Phone number must be exactly 10 digits."
+        },
+        email: {
+            input: form.querySelector('input[name="email"]'),
+            pattern: /^[^@\s]+@[^@\s]+\.[^@\s]+$/,
+            message: "Enter a valid email address."
+        },
+        password: {
+            input: form.querySelector('input[name="password"]'),
+            pattern: /^.{6,}$/,
+            message: "Password must be at least 6 characters."
+        },
+        confirm_password: {
+            input: form.querySelector('input[name="confirm_password"]'),
+            matchField: "password",
+            message: "Passwords do not match."
+        }
+    };
+
+    function showError(inputEl, message) {
+        removeError(inputEl);
+
+        const error = document.createElement("div");
+        error.className = "error-message";
+        error.style.color = "red";
+        error.style.fontSize = "13px";
+        error.style.marginTop = "5px";
+        error.textContent = message;
+
+        const inputGroup = inputEl.closest(".input-group");
+        inputGroup.insertAdjacentElement('afterend', error); // place below input-group
+    }
+
+    function removeError(inputEl) {
+        const inputGroup = inputEl.closest(".input-group");
+        const next = inputGroup.nextElementSibling;
+        if (next && next.classList.contains("error-message")) {
+            next.remove();
+        }
+    }
+
+    function validateField(key) {
+        const field = inputs[key];
+        const input = field.input;
+        const value = input.value.trim();
+
+        if (field.pattern && !field.pattern.test(value)) {
+            showError(input, field.message);
+            return false;
+        }
+
+        if (field.matchField) {
+            const matchValue = inputs[field.matchField].input.value.trim();
+            if (value !== matchValue) {
+                showError(input, field.message);
+                return false;
+            }
+        }
+
+        removeError(input);
+        return true;
+    }
+
+    // Real-time input validation
+    for (let key in inputs) {
+        inputs[key].input.addEventListener("input", () => validateField(key));
+    }
+
+    // Final validation on submit
+    form.addEventListener("submit", function (e) {
+        let isValid = true;
+        for (let key in inputs) {
+            if (!validateField(key)) {
+                isValid = false;
+            }
+        }
+
+        if (!isValid) {
+            e.preventDefault(); // stop submission
+        }
+    });
+});
+</script>
+</body>
+</html>

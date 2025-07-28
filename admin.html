@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      }
+      .input {
+        @apply w-full border border-gray-200 rounded-xl px-4 py-3 bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-300 ease-in-out shadow-sm;
+      }
+      .btn {
+        @apply w-full py-3 rounded-xl shadow-lg font-semibold text-white transition duration-300 ease-in-out transform hover:-translate-y-0.5;
+      }
+      .nav-link {
+        @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-300 text-gray-100;
+      }
+      .active-btn {
+        @apply bg-indigo-700 text-white shadow-md;
+      }
+      .input:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+      }
+      textarea.input {
+        min-height: 100px;
+        resize: vertical;
+      }
+      .review-rating {
+        display: flex;
+        gap: 3px;
+        font-size: 18px;
+      }
+      .review-rating .star {
+        color: #e5e7eb;
+      }
+      .review-rating .star.selected {
+        color: #facc15;
+      }
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #1f2937;
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        z-index: 10000;
+        opacity: 0;
+        transform: translateX(120%);
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        display: flex;
+        flex-direction: column;
+        min-width: 320px;
+        max-width: 420px;
+      }
+      .toast-container.show {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .toast-message {
+        font-weight: 500;
+        line-height: 1.5;
+        margin-bottom: 8px;
+      }
+      .progress-bar-container {
+        width: 100%;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .progress-bar {
+        height: 100%;
+        width: 0;
+        transition: width linear;
+      }
+      .toast-container.success {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        border-left: 5px solid #86efac;
+      }
+      .toast-container.success .progress-bar {
+        background: #86efac;
+      }
+      .toast-container.error {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        border-left: 5px solid #fca5a5;
+      }
+      .toast-container.error .progress-bar {
+        background: #fca5a5;
+      }
+      .toast-container.warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        border-left: 5px solid #fdba74;
+      }
+      .toast-container.warning .progress-bar {
+        background: #fdba74;
+      }
+      .toast-container.info {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        border-left: 5px solid #a5b4fc;
+      }
+      .toast-container.info .progress-bar {
+        background: #a5b4fc;
+      }
+      .modal {
+        animation: fadeIn 0.3s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .sidebar {
+        transition: width 0.3s ease-in-out;
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 80px;
+        }
+        .sidebar h2 {
+          display: none;
+        }
+        .nav-link span {
+          display: none;
+        }
+        .nav-link {
+          justify-content: center;
+        }
+      }
+      .card {
+        @apply bg-white rounded-2xl shadow-xl p-6 transition-all duration-300 hover:shadow-2xl;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex text-gray-900">
+    <aside class="sidebar w-64 bg-indigo-600 text-white flex flex-col p-6 shadow-2xl">
+      <h2 class="text-2xl font-bold mb-8 text-center tracking-tight">
+        Admin Dashboard
+      </h2>
+      <nav class="flex flex-col gap-10 mt-10">
+        <button
+          onclick="showSection('teachers')"
+          class="nav-link active-btn flex items-center gap-5"
+        >
+         <img src="./assets/img/teachers.png" alt="" class="size-8">
+          <span>Teachers</span>
+        </button>
+        <button
+          onclick="showSection('blogs')"
+          class="nav-link flex items-center gap-5"
+        >
+           <img src="./assets/img/blog.png" alt="" class="size-8">
+          <span>Blogs</span>
+        </button>
+        <button
+          onclick="showSection('reviews')"
+          class="nav-link flex items-center gap-5"
+        >
+            <img src="./assets/img/star.png" alt="" class="size-8">
+          <span>Reviews</span>
+        </button>
+        <button
+          onclick="showSection('contact')"
+          class="nav-link flex items-center gap-5"
+        >
+           <img src="./assets/img/mail.png" alt="" class="size-8">
+          <span>Contact Us</span>
+        </button>
+      </nav>
+    </aside>
+
+    <main class="flex-1 p-8 overflow-y-auto space-y-8">
+      <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
+        <button
+          onclick="logout()"
+          class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-6 rounded-xl shadow-md transition duration-300"
+        >
+          Logout
+        </button>
+      </div>
+
+      <section id="teachers" class="section block card">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-semibold text-gray-800">Manage Teachers</h2>
+          <button
+            onclick="openAddTeacherModal()"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl shadow-md transition"
+          >
+            + Add Teacher
+          </button>
+        </div>
+        <div class="overflow-x-auto rounded-xl">
+          <table class="min-w-full table-auto text-sm bg-white rounded-xl">
+            <thead class="bg-gray-100 text-left text-xs uppercase text-gray-600">
+              <tr>
+                <th class="px-6 py-4">Image</th>
+                <th class="px-6 py-4">Name</th>
+                <th class="px-6 py-4">College</th>
+                <th class="px-6 py-4">Subject</th>
+                <th class="px-6 py-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="teacherBody" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="blogs" class="section hidden card">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-semibold text-gray-800">Manage Blogs</h2>
+          <button
+            onclick="openAddBlogModal()"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl shadow-md transition"
+          >
+            + Add Blog
+          </button>
+        </div>
+        <div class="overflow-x-auto rounded-xl">
+          <table class="min-w-full table-auto text-sm bg-white rounded-xl">
+            <thead class="bg-gray-100 text-left text-xs uppercase text-gray-600">
+              <tr>
+                <th class="px-6 py-4">Image</th>
+                <th class="px-6 py-4">Title</th>
+                <th class="px-6 py-4">Description</th>
+                <th class="px-6 py-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="blogBody" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="reviews" class="section hidden card">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-semibold text-gray-800">Manage Reviews</h2>
+          <button
+            onclick="openAddReviewModal()"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl shadow-md transition"
+          >
+            + Add Review
+          </button>
+        </div>
+        <div class="overflow-x-auto rounded-xl">
+          <table class="min-w-full table-auto text-sm bg-white rounded-xl">
+            <thead class="bg-gray-100 text-left text-xs uppercase text-gray-600">
+              <tr>
+                <th class="px-6 py-4">Image</th>
+                <th class="px-6 py-4">Name</th>
+                <th class="px-6 py-4">Address</th>
+                <th class="px-6 py-4">Rating</th>
+                <th class="px-6 py-4">Content</th>
+                <th class="px-6 py-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="reviewBody" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="contact" class="section hidden card">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Contact Us Responses</h2>
+        <div class="overflow-x-auto rounded-xl">
+          <table class="min-w-full table-auto text-sm bg-white rounded-xl">
+            <thead class="bg-gray-100 text-left text-xs uppercase text-gray-600">
+              <tr>
+                <th class="px-6 py-4">Name</th>
+                <th class="px-6 py-4">Email</th>
+                <th class="px-6 py-4">Phone</th>
+                <th class="px-6 py-4">Project</th>
+                <th class="px-6 py-4">Subject</th>
+                <th class="px-6 py-4">Message</th>
+                <th class="px-6 py-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="contactBody" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Toast Notification -->
+      <div id="toastNotification" class="toast-container">
+        <span id="toastMessage" class="toast-message"></span>
+        <div class="progress-bar-container">
+          <div id="toastProgressBar" class="progress-bar"></div>
+        </div>
+      </div>
+
+      <!-- Modals -->
+      <div
+        id="addTeacherModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden p-4 modal"
+      >
+        <div class="bg-white w-full  max-w-lg rounded-2xl shadow-2xl p-8">
+          <button
+            onclick="closeAddTeacherModal()"
+            class="absolute top-76 right-0 left-96 text-gray-500 hover:text-red-500 text-2xl font-bold"
+            aria-label="Close"
+          >
+            &times;
+          </button>
+          <h2 class="text-2xl font-bold mb-6 text-gray-800">Add New Teacher</h2>
+          <form
+            id="addTeacherForm"
+            method="POST"
+            enctype="multipart/form-data"
+            class="space-y-5"
+          >
+            <div>
+              <label
+                for="addTeacherName"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Name</label>
+              <input
+                type="text"
+                id="addTeacherName"
+                name="name"
+                placeholder="Enter teacher's name"
+                class="input px-4 py-3 w-full"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="addTeacherCollege"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >College</label>
+              <input
+                type="text"
+                id="addTeacherCollege"
+                name="college"
+                placeholder="Enter college name"
+                class="input px-4 py-3 w-full"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="addTeacherSubject"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Subject</label>
+              <input
+                type="text"
+                id="addTeacherSubject"
+                name="subject"
+                placeholder="Enter subject taught"
+                class="input px-4 py-3 w-full"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="addTeacherImage"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Image</label>
+              <input
+                type="file"
+                id="addTeacherImage"
+                name="image"
+                class="input file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="btn bg-indigo-600 hover:bg-indigo-700 px-4 py-3 w-full rounded-lg"
+            >
+              Add Teacher
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div
+        id="editTeacherModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden p-4 modal"
+      >
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-8">
+          <button
+            onclick="closeEditTeacherModal()"
+            class="absolute top-76 right-0 left-96 text-gray-500 hover:text-red-500 text-2xl font-bold"
+            aria-label="Close"
+          >
+            &times;
+          </button>
+          <h2 class="text-2xl font-bold mb-6 text-gray-800">Edit Teacher</h2>
+          <form
+            id="editTeacherForm"
+            method="POST"
+            enctype="multipart/form-data"
+            class="space-y-5"
+          >
+            <input type="hidden" id="editTeacherId" name="id" />
+            <div>
+              <label
+                for="editTeacherName"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Name</label>
+              <input
+                type="text"
+                id="editTeacherName"
+                name="name"
+                placeholder="Enter teacher's name"
+                class="input px-4 py-3 w-full rounded-lg"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="editTeacherCollege"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >College</label>
+              <input
+                type="text"
+                id="editTeacherCollege"
+                name="college"
+                placeholder="Enter college name"
+                class="input px-4 py-3 w-full rounded-lg"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="editTeacherSubject"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Subject</label>
+              <input
+                type="text"
+                id="editTeacherSubject"
+                name="subject"
+                placeholder="Enter subject taught"
+                class="input px-4 py-3 w-full rounded-lg"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="btn bg-indigo-600 hover:bg-indigo-700 px-4 py-3 w-full rounded-lg"
+            >
+              Update Teacher
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div
+        id="addBlogModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden p-4 modal"
+      >
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-8">
+          <button
+            onclick="closeAddBlogModal()"
+            class="absolute top-76 right-0 left-96 text-gray-500 hover:text-red-500 text-2xl font-bold"
+            aria-label="Close"
+          >
+            &times;
+          </button>
+          <h2 class="text-2xl font-bold mb-6 text-gray-800">Add New Blog</h2>
+          <form
+            id="addBlogForm"
+            method="POST"
+            enctype="multipart/form-data"
+            class="space-y-5 "
+          >
+            <div>
+              <label
+                for="addBlogHeading"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Blog Title</label>
+              <input
+                type="text"
+                id="addBlogHeading"
+                name="heading"
+                placeholder="Enter blog title"
+                class="input px-4 py-3 w-full rounded-lg"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="addBlogDescription"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Description</label>
+              <textarea
+                id="addBlogDescription"
+                name="description"
+                placeholder="Enter blog description"
+                rows="4"
+                class="input px-4 py-3 w-full rounded-lg"
+                required
+              ></textarea>
+            </div>
+            <div>
+              <label
+                for="addBlogImage"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Image</label>
+              <input
+                type="file"
+                id="addBlogImage"
+                name="image"
+                class="input file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="btn bg-green-600 hover:bg-green-700 px-4 py-3 w-full rounded-lg"
+            >
+              Add Blog
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div
+        id="editBlogModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden p-4 modal"
+      >
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-8">
+          <button
+            onclick="closeEditBlogModal()"
+            class="absolute top-76 right-0 left-96 text-gray-500 hover:text-red-500 text-2xl font-bold"
+            aria-label="Close"
+          >
+            &times;
+          </button>
+          <h2 class="text-2xl font-bold mb-6 text-gray-800">Edit Blog</h2>
+          <form
+            id="editBlogForm"
+            method="POST"
+            enctype="multipart/form-data"
+            class="space-y-5"
+          >
+            <input type="hidden" id="editBlogId" name="id" />
+            <div>
+              <label
+                for="editBlogHeading"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Blog Title</label>
+              <input
+                type="text"
+                id="editBlogHeading"
+                name="heading"
+                placeholder="Enter blog title"
+                class="input px-4 py-3 w-full rounded-lg"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="editBlogDescription"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Description</label>
+              <textarea
+                id="editBlogDescription"
+                name="description"
+                placeholder="Enter blog description"
+                rows="4"
+                class="input px-4 py-3 w-full rounded-lg"
+                required
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              class="btn bg-green-600 hover:bg-green-700 px-4 py-3 w-full rounded-lg"
+            >
+              Update Blog
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div
+        id="addReviewModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden p-4 modal"
+      >
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-8">
+          <button
+            onclick="closeAddReviewModal()"
+            class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-2xl font-bold"
+            aria-label="Close"
+          >
+            &times;
+          </button>
+          <h2 class="text-2xl font-bold mb-6 text-gray-800">Add New Review</h2>
+          <form
+            id="addReviewForm"
+            method="POST"
+            enctype="multipart/form-data"
+            class="space-y-5"
+          >
+            <div>
+              <label
+                for="addReviewName"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Name</label>
+              <input
+                type="text"
+                id="addReviewName"
+                name="name"
+                placeholder="Enter reviewer's name"
+                class="input"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="addReviewAddress"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Address</label>
+              <input
+                type="text"
+                id="addReviewAddress"
+                name="address"
+                placeholder="Enter reviewer's address"
+                class="input"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="addReviewRating"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Rating</label>
+              <select
+                id="addReviewRating"
+                name="rating"
+                class="input"
+                required
+              >
+                <option value="">Select Rating</option>
+                <option value="1">1 Star</option>
+                <option value="2">2 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="5">5 Stars</option>
+              </select>
+            </div>
+            <div>
+              <label
+                for="addReviewContent"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Content</label>
+              <textarea
+                id="addReviewContent"
+                name="content"
+                placeholder="Enter review content"
+                rows="4"
+                class="input"
+                required
+              ></textarea>
+            </div>
+            <div>
+              <label
+                for="addReviewImage"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Image</label>
+              <input
+                type="file"
+                id="addReviewImage"
+                name="image"
+                class="input file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-yellow-50 file:text-yellow-700 hover:file:bg-yellow-100"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="btn bg-yellow-600 hover:bg-yellow-700"
+            >
+              Add Review
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div
+        id="editReviewModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden p-4 modal"
+      >
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-8">
+          <button
+            onclick="closeEditReviewModal()"
+            class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-2xl font-bold"
+            aria-label="Close"
+          >
+            &times;
+          </button>
+          <h2 class="text-2xl font-bold mb-6 text-gray-800">Edit Review</h2>
+          <form
+            id="editReviewForm"
+            method="POST"
+            enctype="multipart/form-data"
+            class="space-y-5"
+          >
+            <input type="hidden" id="editReviewId" name="id" />
+            <div>
+              <label
+                for="editReviewName"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Name</label>
+              <input
+                type="text"
+                id="editReviewName"
+                name="name"
+                placeholder="Enter reviewer's name"
+                class="input"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="editReviewAddress"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Address</label>
+              <input
+                type="text"
+                id="editReviewAddress"
+                name="address"
+                placeholder="Enter reviewer's address"
+                class="input"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="editReviewRating"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Rating</label>
+              <select
+                id="editReviewRating"
+                name="rating"
+                class="input"
+                required
+              >
+                <option value="">Select Rating</option>
+                <option value="1">1 Star</option>
+                <option value="2">2 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="5">5 Stars</option>
+              </select>
+            </div>
+            <div>
+              <label
+                for="editReviewContent"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >Content</label>
+              <textarea
+                id="editReviewContent"
+                name="content"
+                placeholder="Enter review content"
+                rows="4"
+                class="input"
+                required
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              class="btn bg-yellow-600 hover:bg-yellow-700"
+            >
+              Update Review
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <script>
+        const Base_Url = "localhost"; // Make sure this matches your PHP server
+        const toastNotification = document.getElementById("toastNotification");
+        const toastMessage = document.getElementById("toastMessage");
+        const toastProgressBar = document.getElementById("toastProgressBar");
+        let toastTimeout;
+
+        function showToast(message, type = "success", duration = 3000) {
+          if (toastTimeout) {
+            clearTimeout(toastTimeout);
+          }
+          toastNotification.className = "toast-container";
+          toastProgressBar.style.transition = "none";
+          toastProgressBar.style.width = "0%";
+          toastMessage.textContent = message;
+          toastNotification.offsetHeight;
+          toastNotification.classList.add("show", type);
+          setTimeout(() => {
+            toastProgressBar.style.transition = `width ${duration / 1000}s linear`;
+            toastProgressBar.style.width = "100%";
+          }, 50);
+          toastTimeout = setTimeout(() => {
+            hideToast();
+          }, duration);
+        }
+
+        function hideToast() {
+          toastNotification.classList.remove("show");
+          setTimeout(() => {
+            toastProgressBar.style.transition = "none";
+            toastProgressBar.style.width = "0%";
+            toastNotification.className = "toast-container";
+          }, 300);
+        }
+
+        function showSection(id) {
+          document
+            .querySelectorAll(".section")
+            .forEach((s) => s.classList.add("hidden"));
+          document.getElementById(id).classList.remove("hidden");
+          document
+            .querySelectorAll(".nav-link")
+            .forEach((btn) => btn.classList.remove("active-btn"));
+          if (event.target.classList.contains("nav-link")) {
+            event.target.classList.add("active-btn");
+          } else {
+            event.target.closest(".nav-link").classList.add("active-btn");
+          }
+          if (id === "contact") {
+            loadContactMessages();
+          } else if (id === "reviews") {
+            loadReviews();
+          } else if (id === "teachers") {
+            loadTeachers();
+          } else if (id === "blogs") {
+            loadBlogs();
+          }
+        }
+
+        function logout() {
+          window.location.href = "index.html";
+        }
+
+        function openAddTeacherModal() {
+          document.getElementById("addTeacherForm").reset();
+          document.getElementById("addTeacherImage").required = true;
+          document.getElementById("addTeacherModal").classList.remove("hidden");
+        }
+
+        function closeAddTeacherModal() {
+          document.getElementById("addTeacherModal").classList.add("hidden");
+        }
+
+        document
+          .getElementById("addTeacherForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const form = e.target;
+            const imageInput = form.querySelector("#addTeacherImage");
+            const formData = new FormData();
+            formData.append("name", form.querySelector("#addTeacherName").value);
+            formData.append(
+              "college",
+              form.querySelector("#addTeacherCollege").value
+            );
+            formData.append(
+              "subject",
+              form.querySelector("#addTeacherSubject").value
+            );
+            if (imageInput.files.length > 0) {
+              formData.append("image", imageInput.files[0]);
+            }
+            try {
+              const response = await fetch(
+                `http://${Base_Url}/Sample_php/api/teacher.php`,
+                {
+                  method: "POST",
+                  body: formData,
+                }
+              );
+              const result = await response.json();
+              if (response.ok) {
+                showToast("Teacher added successfully!", "success");
+                closeAddTeacherModal();
+                loadTeachers();
+              } else {
+                showToast(
+                  "Error adding teacher: " + (result.message || "Unknown error"),
+                  "error"
+                );
+              }
+            } catch (error) {
+              console.error("Add Teacher API Error:", error);
+              showToast(
+                "Failed to add teacher. Check console for more details.",
+                "error"
+              );
+            }
+          });
+
+        async function openEditTeacherModal(id) {
+          const form = document.getElementById("editTeacherForm");
+          form.reset();
+          try {
+            const response = await fetch(
+              `http://${Base_Url}/Sample_php/api/teacher.php?id=${id}`
+            );
+            const data = await response.json();
+            if (response.ok) {
+              document.getElementById("editTeacherId").value = id;
+              document.getElementById("editTeacherName").value = data.name;
+              document.getElementById("editTeacherCollege").value = data.college;
+              document.getElementById("editTeacherSubject").value = data.subject;
+              document
+                .getElementById("editTeacherModal")
+                .classList.remove("hidden");
+            } else {
+              showToast(
+                "Failed to load teacher data for editing: " +
+                  (data.message || "Unknown error"),
+                "error"
+              );
+            }
+          } catch (error) {
+            console.error("Fetch Teacher for Edit API Error:", error);
+            showToast(
+              "Failed to load teacher data. Check console for more details.",
+              "error"
+            );
+          }
+        }
+
+        function closeEditTeacherModal() {
+          document.getElementById("editTeacherModal").classList.add("hidden");
+        }
+
+        document
+          .getElementById("editTeacherForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const form = e.target;
+            const id = form.querySelector("#editTeacherId").value;
+            const data = {
+              name: form.querySelector("#editTeacherName").value,
+              college: form.querySelector("#editTeacherCollege").value,
+              subject: form.querySelector("#editTeacherSubject").value,
+            };
+            try {
+              const response = await fetch(
+                `http://${Base_Url}/Sample_php/api/teacher.php?id=${id}`,
+                {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(data),
+                }
+              );
+              const result = await response.json();
+              if (response.ok) {
+                showToast("Teacher updated successfully!", "info");
+                closeEditTeacherModal();
+                loadTeachers();
+              } else {
+                showToast(
+                  "Error updating teacher: " +
+                    (result.message || "Unknown error"),
+                  "error"
+                );
+              }
+            } catch (error) {
+              console.error("Update Teacher API Error:", error);
+              showToast(
+                "Failed to update teacher. Check console for more details.",
+                "error"
+              );
+            }
+          });
+
+        async function deleteTeacher(id) {
+          if (!confirm("Are you sure you want to delete this teacher?")) return;
+          try {
+            const response = await fetch(
+              `http://${Base_Url}/Sample_php/api/teacher.php?id=${id}`,
+              {
+                method: "DELETE",
+              }
+            );
+            const result = await response.json();
+            if (response.ok) {
+              showToast("Teacher deleted successfully!", "error");
+              loadTeachers();
+            } else {
+              showToast(
+                "Error deleting teacher: " + (result.message || "Unknown error"),
+                "error"
+              );
+            }
+          } catch (error) {
+            console.error("Delete Teacher API Error:", error);
+            showToast("An error occurred. See console for details.", "error");
+          }
+        }
+
+        async function loadTeachers() {
+          try {
+            const response = await fetch(
+              `http://${Base_Url}/Sample_php/api/teacher.php`
+            );
+            const teachers = await response.json();
+            const tbody = document.getElementById("teacherBody");
+            tbody.innerHTML = "";
+            teachers.forEach((teacher) => {
+              const row = document.createElement("tr");
+              row.classList.add("hover:bg-gray-50");
+              const imageUrl = teacher.image.startsWith("http")
+                ? teacher.image
+                : `http://${Base_Url}/Sample_php/uploads/${teacher.image}`;
+              row.innerHTML = `
+                <td class="px-6 py-4">
+                  <img src="${imageUrl}" class="rounded-xl w-20 h-20 object-cover" alt="${teacher.image}" />
+                </td>
+                <td class="px-6 py-4">${teacher.name}</td>
+                <td class="px-6 py-4">${teacher.college}</td>
+                <td class="px-6 py-4">${teacher.subject}</td>
+                <td class="py-4">
+                  <div class="flex gap-4">
+                    <button onclick="openEditTeacherModal(${teacher.id})" class="text-indigo-600 hover:text-indigo-800">
+                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
+                    </button>
+                    <button onclick="deleteTeacher(${teacher.id})" class="text-red-600 hover:text-red-800">
+                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v2H8V5a2 2 0 012-2z" />
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              `;
+              tbody.appendChild(row);
+            });
+          } catch (error) {
+            console.error("Error loading teachers:", error);
+            showToast(
+              "Failed to load teachers. Check console for more info.",
+              "error"
+            );
+          }
+        }
+
+        function openAddBlogModal() {
+          document.getElementById("addBlogForm").reset();
+          document.getElementById("addBlogImage").required = true;
+          document.getElementById("addBlogModal").classList.remove("hidden");
+        }
+
+        function closeAddBlogModal() {
+          document.getElementById("addBlogModal").classList.add("hidden");
+        }
+
+        document
+          .getElementById("addBlogForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const form = e.target;
+            const imageInput = form.querySelector("#addBlogImage");
+            const formData = new FormData();
+            formData.append(
+              "heading",
+              form.querySelector("#addBlogHeading").value
+            );
+            formData.append(
+              "description",
+              form.querySelector("#addBlogDescription").value
+            );
+            if (imageInput.files.length > 0) {
+              formData.append("cover", imageInput.files[0]);
+            }
+            try {
+              const response = await fetch(
+                `http://${Base_Url}/Sample_php/api/blog.php`,
+                {
+                  method: "POST",
+                  body: formData,
+                }
+              );
+              const result = await response.json();
+              if (response.ok) {
+                showToast("Blog added successfully!", "success");
+                closeAddBlogModal();
+                loadBlogs();
+              } else {
+                showToast(
+                  "Error adding blog: " + (result.message || "Unknown error"),
+                  "error"
+                );
+              }
+            } catch (error) {
+              console.error("Add Blog API Error:", error);
+              showToast(
+                "Failed to add blog. Check console for more details.",
+                "error"
+              );
+            }
+          });
+
+        async function openEditBlogModal(id) {
+          const form = document.getElementById("editBlogForm");
+          form.reset();
+          try {
+            const response = await fetch(
+              `http://${Base_Url}/Sample_php/api/blog.php?id=${id}`
+            );
+            const data = await response.json();
+            if (response.ok) {
+              document.getElementById("editBlogId").value = id;
+              document.getElementById("editBlogHeading").value = data.heading;
+              document.getElementById("editBlogDescription").value =
+                data.description;
+              document.getElementById("editBlogModal").classList.remove("hidden");
+            } else {
+              showToast(
+                "Failed to load blog data for editing: " +
+                  (data.message || "Unknown error"),
+                "error"
+              );
+            }
+          } catch (error) {
+            console.error("Fetch Blog for Edit API Error:", error);
+            showToast(
+              "Failed to load blog data. Check console for more details.",
+              "error"
+            );
+          }
+        }
+
+        function closeEditBlogModal() {
+          document.getElementById("editBlogModal").classList.add("hidden");
+        }
+
+        document
+          .getElementById("editBlogForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const form = e.target;
+            const id = form.querySelector("#editBlogId").value;
+            const data = {
+              heading: form.querySelector("#editBlogHeading").value,
+              description: form.querySelector("#editBlogDescription").value,
+            };
+            try {
+              const response = await fetch(
+                `http://${Base_Url}/Sample_php/api/blog.php?id=${id}`,
+                {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(data),
+                }
+              );
+              const result = await response.json();
+              if (response.ok) {
+                showToast("Blog updated successfully!", "info");
+                closeEditBlogModal();
+                loadBlogs();
+              } else {
+                showToast(
+                  "Error updating blog: " + (result.message || "Unknown error"),
+                  "error"
+                );
+              }
+            } catch (error) {
+              console.error("Update Blog API Error:", error);
+              showToast(
+                "Failed to update blog. Check console for more details.",
+                "error"
+              );
+            }
+          });
+
+        async function deleteBlog(id) {
+          if (!confirm("Are you sure you want to delete this blog?")) return;
+          try {
+            const response = await fetch(
+              `http://${Base_Url}/Sample_php/api/blog.php?id=${id}`,
+              {
+                method: "DELETE",
+              }
+            );
+            const result = await response.json();
+            if (response.ok) {
+              showToast("Blog deleted successfully!", "error");
+              loadBlogs();
+            } else {
+              showToast(
+                "Failed to delete blog: " + (result.message || "Unknown error"),
+                "error"
+              );
+            }
+          } catch (error) {
+            console.error("Delete Blog API Error:", error);
+            showToast("An error occurred. See console for details.", "error");
+          }
+        }
+
+        async function loadBlogs() {
+          try {
+            const response = await fetch(
+              `http://${Base_Url}/Sample_php/api/blog.php`
+            );
+            const blogs = await response.json();
+            const tbody = document.querySelector("#blogBody");
+            tbody.innerHTML = "";
+            blogs.forEach((blog) => {
+              const row = document.createElement("tr");
+              row.classList.add("hover:bg-gray-50");
+              const imageUrl = blog.cover.startsWith("http")
+                ? blog.cover
+                : `http://${Base_Url}/Sample_php/uploads/${blog.cover}`;
+              row.innerHTML = `
+                <td class="px-6 py-4">
+                  <img src="${imageUrl}" class="rounded-xl w-20 h-20 object-cover" alt="${blog.heading}" />
+                </td>
+                <td class="px-6 py-4">${blog.heading}</td>
+                <td class="px-6 py-4 max-w-md truncate">${blog.description}</td>
+                <td class="py-4">
+                  <div class="flex gap-4">
+                    <button onclick="openEditBlogModal(${blog.id})" class="text-indigo-600 hover:text-indigo-800">
+                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
+                    </button>
+                    <button onclick="deleteBlog(${blog.id})" class="text-red-600 hover:text-red-800">
+                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v2H8V5a2 2 0 012-2z" />
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              `;
+              tbody.appendChild(row);
+            });
+          } catch (error) {
+            console.error("Failed to load blogs:", error);
+            showToast(
+              "Error loading blogs. Check console for more info.",
+              "error"
+            );
+          }
+        }
+
+        function openAddReviewModal() {
+          document.getElementById("addReviewForm").reset();
+          document.getElementById("addReviewImage").required = true;
+          document.getElementById("addReviewModal").classList.remove("hidden");
+        }
+
+        function closeAddReviewModal() {
+          document.getElementById("addReviewModal").classList.add("hidden");
+        }
+
+        document
+          .getElementById("addReviewForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const form = e.target;
+            const imageInput = form.querySelector("#addReviewImage");
+            const formData = new FormData();
+            formData.append("name", form.querySelector("#addReviewName").value);
+            formData.append(
+              "address",
+              form.querySelector("#addReviewAddress").value
+            );
+            formData.append(
+              "rating",
+              form.querySelector("#addReviewRating").value
+            );
+            formData.append(
+              "content",
+              form.querySelector("#addReviewContent").value
+            );
+            if (imageInput.files.length > 0) {
+              formData.append("image", imageInput.files[0]);
+            }
+            try {
+              const response = await fetch(
+                `http://${Base_Url}/Sample_php/api/review.php`,
+                {
+                  method: "POST",
+                  body: formData,
+                }
+              );
+              const result = await response.json();
+              if (response.ok) {
+                showToast("Review added successfully!", "success");
+                closeAddReviewModal();
+                loadReviews();
+              } else {
+                showToast(
+                  "Error adding review: " + (result.message || "Unknown error"),
+                  "error"
+                );
+              }
+            } catch (error) {
+              console.error("Add Review API Error:", error);
+              showToast(
+                "Failed to add review. Check console for more details.",
+                "error"
+              );
+            }
+          });
+
+        async function openEditReviewModal(id) {
+          const form = document.getElementById("editReviewForm");
+          form.reset();
+          try {
+            const response = await fetch(
+              `http://${Base_Url}/Sample_php/api/review.php?id=${id}`
+            );
+            const data = await response.json();
+            if (response.ok) {
+              document.getElementById("editReviewId").value = id;
+              document.getElementById("editReviewName").value = data.name || "";
+              document.getElementById("editReviewAddress").value =
+                data.address || "";
+              document.getElementById("editReviewRating").value =
+                data.rating || "";
+              document.getElementById("editReviewContent").value =
+                data.content || data.review || "";
+              document
+                .getElementById("editReviewModal")
+                .classList.remove("hidden");
+            } else {
+              showToast(
+                "Failed to load review data for editing: " +
+                  (data.message || "Unknown error"),
+                "error"
+              );
+            }
+          } catch (error) {
+            console.error("Fetch Review for Edit API Error:", error);
+            showToast(
+              "Failed to load review data. Check console for more details.",
+              "error"
+            );
+          }
+        }
+
+        function closeEditReviewModal() {
+          document.getElementById("editReviewModal").classList.add("hidden");
+        }
+
+        document
+          .getElementById("editReviewForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const form = e.target;
+            const id = form.querySelector("#editReviewId").value;
+            const data = {
+              name: form.querySelector("#editReviewName").value,
+              address: form.querySelector("#editReviewAddress").value,
+              rating: form.querySelector("#editReviewRating").value,
+              content: form.querySelector("#editReviewContent").value,
+            };
+            try {
+              const response = await fetch(
+                `http://${Base_Url}/Sample_php/api/review.php?id=${id}`,
+                {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(data),
+                }
+              );
+              const result = await response.json();
+              if (response.ok) {
+                showToast("Review updated successfully!", "info");
+                closeEditReviewModal();
+                loadReviews();
+              } else {
+                showToast(
+                  "Error updating review: " + (result.message || "Unknown error"),
+                  "error"
+                );
+              }
+            } catch (error) {
+              console.error("Update Review API Error:", error);
+              showToast(
+                "Failed to update review. Check console for more details.",
+                "error"
+              );
+            }
+          });
+
+        async function loadReviews() {
+          try {
+            const response = await fetch(
+              `http://${Base_Url}/Sample_php/api/review.php`
+            );
+            const reviews = await response.json();
+            const tbody = document.querySelector("#reviewBody");
+            tbody.innerHTML = "";
+            reviews.forEach((review) => {
+              const row = document.createElement("tr");
+              row.classList.add("hover:bg-gray-50");
+              const imageUrl = review.image
+                ? review.image.startsWith("http")
+                  ? review.image
+                  : `http://${Base_Url}/Sample_php/uploads/${review.image}`
+                : "./assets/img/default-logo.png";
+              let ratingDisplay = '<span class="text-gray-600">N/A</span>';
+              if (review.ratings && review.ratings > 0) {
+                ratingDisplay = '<div class="review-rating">';
+                for (let i = 1; i <= 5; i++) {
+                  ratingDisplay += `<span class="star${
+                    i <= review.ratings ? " selected" : ""
+                  }">★</span>`;
+                }
+                ratingDisplay += `</div>`;
+              }
+              row.innerHTML = `
+                <td class="px-6 py-4">
+                  <img src="${imageUrl}" class="rounded-xl w-20 h-20 object-cover" alt="${
+                review.name || "Review"
+              }" />
+                </td>
+                <td class="px-6 py-4">${review.name || "Anonymous"}</td>
+                <td class="px-6 py-4">${review.address || "N/A"}</td>
+                <td class="px-6 py-4">${ratingDisplay}</td>
+                <td class="px-6 py-4 max-w-xs truncate" title="${
+                  review.content || review.review || ""
+                }">
+                  ${review.content || review.review || "No content"}
+                </td>
+                <td class="px-6 py-4">
+                  
+                    <button onclick="deleteReview(${review.id})" class="text-red-600 hover:text-red-800">
+                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v2H8V5a2 2 0 012-2z" />
+                      </svg>
+                    </button>
+               
+                </td>
+              `;
+              tbody.appendChild(row);
+            });
+          } catch (error) {
+            console.error("Error loading reviews:", error);
+            showToast(
+              "Failed to load reviews. Check console for more details.",
+              "error"
+            );
+          }
+        }
+
+        async function deleteReview(id) {
+          if (!confirm("Are you sure you want to delete this review?")) return;
+          try {
+            const response = await fetch(
+              `http://${Base_Url}/Sample_php/api/review.php?id=${id}`,
+              {
+                method: "DELETE",
+              }
+            );
+            const result = await response.json();
+            if (response.ok) {
+              showToast("Review deleted successfully!", "error");
+              loadReviews();
+            } else {
+              showToast(
+                "Error deleting review: " + (result.message || "Unknown error"),
+                "error"
+              );
+            }
+          } catch (error) {
+            console.error("Delete Review API Error:", error);
+            showToast(
+              "An error occurred while deleting the review. See console for details.",
+              "error"
+            );
+          }
+        }
+
+        async function loadContactMessages() {
+          try {
+            const response = await fetch(
+              `http://${Base_Url}/Sample_php/api/contact.php`
+            );
+            const contactMessages = await response.json();
+            const tbody = document.querySelector("#contactBody");
+            tbody.innerHTML = "";
+            contactMessages.forEach((message) => {
+              const row = document.createElement("tr");
+              row.classList.add("hover:bg-gray-50");
+              row.innerHTML = `
+                <td class="px-6 py-4">${message.name}</td>
+                <td class="px-6 py-4">${message.email}</td>
+                <td class="px-6 py-4">${message.contact}</td>
+                <td class="px-6 py-4">${message.project}</td>
+                <td class="px-6 py-4">${message.subject}</td>
+                <td class="px-6 py-4 max-w-xs truncate" title="${message.message}">
+                  ${message.message}
+                </td>
+                <td class="px-6 py-4">
+                  <button onclick="deleteContactMessage(${message.id})" class="text-red-600 hover:text-red-800">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v2H8V5a2 2 0 012-2z" />
+                    </svg>
+                  </button>
+                </td>
+              `;
+              tbody.appendChild(row);
+            });
+          } catch (error) {
+            console.error("Error loading contact messages:", error);
+            showToast(
+              "Failed to load contact messages. Check console for more details.",
+              "error"
+            );
+          }
+        }
+
+        async function deleteContactMessage(id) {
+          if (!confirm("Are you sure you want to delete this contact entry?"))
+            return;
+          try {
+            const response = await fetch(
+              `http://${Base_Url}/Sample_php/api/contact.php?id=${id}`,
+              {
+                method: "DELETE",
+              }
+            );
+            const result = await response.json();
+            if (response.ok) {
+              showToast("Contact message deleted successfully!", "error");
+              loadContactMessages();
+            } else {
+              showToast(
+                "Error deleting contact message: " +
+                  (result.message || "Unknown error"),
+                "error"
+              );
+            }
+          } catch (error) {
+            console.error("Delete Contact API Error:", error);
+            showToast(
+              "An error occurred while deleting the contact message. See console for details.",
+              "error"
+            );
+          }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+          showToast("Welcome to the Advanced Admin Dashboard!", "info", 3000);
+          loadTeachers();
+          loadBlogs();
+        });
+      </script>
+    </body>
+</html>
